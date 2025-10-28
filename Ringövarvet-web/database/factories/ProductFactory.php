@@ -4,6 +4,9 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\Subcategory;
+use App\Models\Product;
+use App\Models\Property;
+use App\Models\SubcategoryProperty;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Product>
@@ -21,5 +24,27 @@ class ProductFactory extends Factory
             'name' => fake()->name(),
             'subcategoryId' => Subcategory::inRandomOrder()->first()->id
         ];
+    }
+
+    public function configure()
+    {
+        // Create properties
+
+        return $this->afterCreating(function (Product $product) {
+            $subcategoryProperties = SubcategoryProperty::where('subcategoryId', $product->subcategoryId)->get();
+
+            $subcategoryProperties->each(function ($entry) {
+                new ProductProperty([
+                    'productId' => $product->id,
+                    'propertyId' => $entry->propertyId,
+                    'value' => fake()->name()
+                ])->save();
+            });
+
+            return [
+                'productId' => $product->id,
+                'propertyId' => Property::where('id', $subcategoryProperty->id)->inRandomOrder()->first()->id
+            ];
+        });
     }
 }
