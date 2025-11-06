@@ -1,21 +1,50 @@
 <script setup>
-	import { ref, reactive } from 'vue';
+	import { ref } from 'vue';
 
 	import { dbAdmin } from '../globals.js';
+
+	async function fetchRead(kind) {
+		let data = await fetch('/api/admin/read/' + kind,
+		{
+			method: 'POST',
+			headers: {
+				'X-CSRF-TOKEN': csrf_token
+			}
+		});
+		dbAdmin.value.data = await data.json();
+	};
 </script>
 
 <template>
 	<div>
 		<div class="modeSelCont">
 			<button v-bind:class="{isModeSelected: dbAdmin.mode == 0}" @click="dbAdmin.mode = 0">Skapa</button>
-			<button v-bind:class="{isModeSelected: dbAdmin.mode == 1}" @click="dbAdmin.mode = 1">Hantera</button>
+			<button v-bind:class="{isModeSelected: dbAdmin.mode == 1}" @click="(async () => {
+				dbAdmin.mode = 1;
+				fetchRead(['product', 'unit', 'property', 'category', 'subcategory'][dbAdmin.tab]);
+			})">Hantera</button>
 		</div>
 		<div class="tabCont">
-			<button v-bind:class="{isModeSelected: dbAdmin.tab == 0}" @click="dbAdmin.tab = 0">Produkt (???)</button>
-			<button v-bind:class="{isModeSelected: dbAdmin.tab == 1}" @click="dbAdmin.tab = 1">Enhet (meter, hk)</button>
-			<button v-bind:class="{isModeSelected: dbAdmin.tab == 2}" @click="dbAdmin.tab = 2">Egenskap (förlik, effekt)</button>
-			<button v-bind:class="{isModeSelected: dbAdmin.tab == 3}" @click="dbAdmin.tab = 3">Kategori (segel, motor)</button>
-			<button v-bind:class="{isModeSelected: dbAdmin.tab == 4}" @click="dbAdmin.tab = 4">Subkategori (försegel, tändkulemotor)</button>
+			<button v-bind:class="{isModeSelected: dbAdmin.tab == 0}" @click="(async () => {
+				dbAdmin.tab = 0;
+				fetchRead('product');
+			})">Produkt (???)</button>
+			<button v-bind:class="{isModeSelected: dbAdmin.tab == 1}" @click="(async () => {
+				dbAdmin.tab = 1;
+				fetchRead('unit');
+			})">Enhet (meter, hk)</button>
+			<button v-bind:class="{isModeSelected: dbAdmin.tab == 2}" @click="(async () => {
+				dbAdmin.tab = 2;
+				fetchRead('property');
+			})">Egenskap (förlik, effekt)</button>
+			<button v-bind:class="{isModeSelected: dbAdmin.tab == 3}" @click="(async () => {
+				dbAdmin.tab = 3;
+				fetchRead('category');
+			})">Kategori (segel, motor)</button>
+			<button v-bind:class="{isModeSelected: dbAdmin.tab == 4}" @click="(async () => {
+				dbAdmin.tab = 4;
+				fetchRead('subcategory');
+			})">Subkategori (försegel, tändkulemotor)</button>
 		</div>
 	</div>
 </template>

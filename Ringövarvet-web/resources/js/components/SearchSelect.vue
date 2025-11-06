@@ -1,10 +1,10 @@
 <script setup>
-	import { ref, reactive } from 'vue';
+	import { ref } from 'vue';
 
 	import { dbAdmin } from '../globals.js';
-	const p = defineProps(['list', 'setValue']);
+	const p = defineProps(['list', 'setValue', 'default']);
 
-	const searchQuery = ref('');
+	const searchQuery = ref(p.default ? p.list.find((e) => e.id == p.default).name : '');
 </script>
 
 <template>

@@ -1,0 +1,29 @@
+<script setup>
+	import { ref } from 'vue';
+
+	const p = defineProps(['data', 'update', 'delete']);
+
+	const currentName = p.data.name;
+</script>
+
+<template>
+	<div class="ManageMenuCategoryCont">
+		<input type="text" v-model="p.data.name">
+		<button @click="() =>{
+			p.data.name = currentName;
+		}">Återgå</button>
+		<button @click="p.update('category', {id: p.data.id, name: p.data.name})">Uppdatera</button>
+		<button @click="p.delete('category', {id: p.data.id})">Radera</button>
+	</div>
+</template>
+
+<style type="text/css">
+	.ManageMenuCategoryCont{
+		margin: 0 0 20px;
+		padding: 10px;
+		border: solid 1px;
+	}
+	.ManageMenuCategoryCont > input{
+		display: block;
+	}
+</style>

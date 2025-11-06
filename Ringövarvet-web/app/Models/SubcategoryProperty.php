@@ -10,4 +10,9 @@ class SubcategoryProperty extends Model
     use HasFactory;
 
     public $table = 'subcategories-properties';
+
+    protected $fillable = [
+        'subcategoryId',
+        'propertyId'
+    ];
 }

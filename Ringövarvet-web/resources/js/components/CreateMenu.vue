@@ -1,5 +1,5 @@
 <script setup>
-	import { ref, reactive } from 'vue';
+	import { ref } from 'vue';
 
 	import { dbAdmin } from '../globals.js';
 
@@ -47,6 +47,32 @@
 			id: 1
 		}
 	]);
+
+	const unitName = ref('');
+
+	const propertyName = ref('');
+	const propertyUnitId = ref(0);
+
+	const categoryName = ref('');
+
+	const subcategoryDataCategories = ref([]);
+	const subcategoryDataProperties = ref([]);
+
+	const subcategoryName = ref('');
+	const subcategoryCategoryId = ref(0);
+	let keyCnt = 0;
+	const subcategoryPropertyIds = ref([{id: 0, key: keyCnt}]);
+
+	async function fetchCreate(kind, body) {
+		let res = await fetch('/api/admin/create/' + kind, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				'X-CSRF-TOKEN': csrf_token
+			},
+			body: JSON.stringify(body)
+		});
+	}
 </script>
 
 <template>
@@ -66,19 +92,47 @@
 		</div>
 		<div v-show="dbAdmin.tab == 1">
 			<h1>Skapa ny enhet</h1>
-			<input type="text">
+			<input type="text" v-model="unitName">
+			<button @click="(() =>{
+				fetchCreate('unit', {name: unitName});
+				unitName = '';
+			})()">Skapa</button>
 		</div>
 		<div v-show="dbAdmin.tab == 2">
 			<h1>Skapa ny egenskap</h1>
-			<input type="text">
+			<input type="text" v-model="propertyName">
+			<SearchSelect v-bind:list="dbAdmin.data.units" v-bind:setValue="(id) => propertyUnitId = id"/>
+			<button @click="(() =>{
+				fetchCreate('property', {name: propertyName, unitId: propertyUnitId});
+				propertyName = '';
+			})()">Skapa</button>
 		</div>
 		<div v-show="dbAdmin.tab == 3">
 			<h1>Skapa ny kategori</h1>
-			<input type="text">
+			<input type="text" v-model="categoryName">
+			<button @click="(() =>{
+				fetchCreate('category', {name: categoryName});
+				categoryName = '';
+			})()">Skapa</button>
 		</div>
 		<div v-show="dbAdmin.tab == 4">
 			<h1>Skapa ny subkategori</h1>
-			<input type="text">
+			<input type="text" v-model="subcategoryName">
+			<SearchSelect v-bind:list="dbAdmin.data.categories" v-bind:setValue="(id) => subcategoryCategoryId = id"/>
+			<div v-for="(entry, index) in subcategoryPropertyIds" :key="entry.key">
+				id: {{entry.id}}, index: {{index}}, key: {{entry.key}}
+				<SearchSelect v-bind:list="dbAdmin.data.properties" v-bind:setValue="(id) => subcategoryPropertyIds[index].id = id"/>
+				<button @click="(() =>{
+					subcategoryPropertyIds.splice(index, 1);
+				})()">Ta bort</button>
+			</div>
+			<button @click="(() =>{
+				subcategoryPropertyIds.push({id: 0, key: ++keyCnt});
+			})()">Lägg till</button>
+			<button @click="(() =>{
+				fetchCreate('subcategory', {name: subcategoryName, categoryId: subcategoryCategoryId, propertyIds: subcategoryPropertyIds.map((e, i) => e = subcategoryPropertyIds[i].id)});
+				//subcategoryName = '';
+			})()">Skapa</button>
 		</div>
 	</div>
 </template>

@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Databas - Ringövarvet</title>
     @vite(['resources/js/dbAdmin.js'])
+    <script type="text/javascript">
+        const csrf_token = '{{ csrf_token() }}';
+    </script>
 </head>
 <body>
     <div class="app" id="app">
@@ -23,6 +26,9 @@
     }
     .SideSelect{
         margin: 0 20px 0 0;
+    }
+    .AdminMenu{
+        flex-grow: 1;
     }
 </style>
 </html>
