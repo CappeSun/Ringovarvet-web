@@ -3,7 +3,7 @@
 ## Nästa
 
 - Lägga till, handera, radera alla typer
-- Bilder
+- Lägga till produktbilder
 - Produktsida
 
 ## Framtid
