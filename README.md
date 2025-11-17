@@ -1,14 +1,14 @@
-## Roadmap
+# Roadmap
 
-# Nästa
+## Nästa
 
-Lägga till, handera, radera alla typer
-Bilder
-Produktsida
+- Lägga till, handera, radera alla typer
+- Bilder
+- Produktsida
 
-# Framtid
+## Framtid
 
-Språkval
-QR till produktsida
+- Språkval
+- QR till produktsida
 
-# Osäkert
+## Osäkert
