@@ -2,6 +2,7 @@
 
 ## Nästa
 
+- Produkt till artikel
 - Länkar på rotsidan
 - Lägga till, handera, radera alla typer
 - Lägga till produktbilder
