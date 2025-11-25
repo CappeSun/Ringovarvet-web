@@ -1,7 +1,6 @@
 <script setup>
 	import { ref } from 'vue';
 
-	//import { dbAdmin } from '../globals.js';
 	const p = defineProps(['list', 'getValue', 'resetValue', 'onSelect', 'default']);
 
 	const searchQuery = ref(p.default ? p.list.find((e) => e.id == p.default).name : '');

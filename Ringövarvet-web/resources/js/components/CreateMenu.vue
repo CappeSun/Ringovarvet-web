@@ -106,6 +106,17 @@
 		key: subcategoryPropertyKeyCnt
 	}]);
 
+	// FETCH
+
+	const subcategoryCategoryId = ref(0);
+	let subcategoryCategoryResetValue = null;
+
+	let subcategoryPropertyKeyCnt = 0;
+	const subcategoryProperties = ref([{
+		getValue: null,
+		key: subcategoryPropertyKeyCnt
+	}]);
+
 	// UNIT
 
 	const locationName = ref('');
