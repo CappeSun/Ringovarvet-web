@@ -7,5 +7,13 @@ export const dbAdmin = ref({
 	selCategory: 0,
 	selSubcategory: 0,
 
+	data: {},
+	
+	sideSelectResponses: [],
+	sideSelectResponseKey: 0
+});
+
+export const CreateProductMobile = ref({
+	mode: 0,
 	data: {}
 });

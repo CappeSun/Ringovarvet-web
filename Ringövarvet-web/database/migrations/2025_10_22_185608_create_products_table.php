@@ -13,9 +13,12 @@ return new class extends Migration
 	{
 		Schema::create('products', function (Blueprint $table) {
 			$table->id();
-			$table->string('name')->default('Nameless product');
 			$table->unsignedBigInteger('subcategoryId');
 			$table->foreign('subcategoryId')->references('id')->on('subcategories');
+			$table->integer('count')->default(1);
+			$table->double('cost')->default(-1);		// -1 no price data
+			$table->unsignedBigInteger('locationId');
+			$table->foreign('locationId')->references('id')->on('locations');
 			$table->timestamps();
 		});
 	}

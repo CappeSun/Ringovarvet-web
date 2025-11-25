@@ -7,24 +7,24 @@
 </script>
 
 <template>
-	<div class="ManageMenuUnitCont">
+	<div class="ManageMenuCategoryCont">
 		<input type="text" v-model="p.data.name">
 		<br>
 		<button @click="() =>{
 			p.data.name = currentName;
 		}">Återgå</button>
-		<button @click="p.update('unit', {id: p.data.id, name: p.data.name})">Uppdatera</button>
-		<button @click="p.delete('unit', {id: p.data.id})">Radera</button>
+		<button @click="p.update('section', {id: p.data.id, name: p.data.name})">Uppdatera</button>
+		<button @click="p.delete('section', {id: p.data.id})">Radera</button>
 	</div>
 </template>
 
 <style type="text/css">
-	.ManageMenuUnitCont{
+	.ManageMenuCategoryCont{
 		margin: 0 0 20px;
 		padding: 10px;
 		border: solid 1px;
 	}
-	.ManageMenuUnitCont > input{
+	.ManageMenuCategoryCont > input{
 		display: block;
 	}
 </style>

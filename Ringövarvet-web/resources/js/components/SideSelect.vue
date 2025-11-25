@@ -4,7 +4,7 @@
 	import { dbAdmin } from '../globals.js';
 
 	async function fetchRead(kind) {
-		let data = await fetch('/api/admin/read/' + kind,
+		let data = await fetch('/admin/read/' + kind,
 		{
 			method: 'POST',
 			headers: {
@@ -12,7 +12,9 @@
 			}
 		});
 		dbAdmin.value.data = await data.json();
-	};
+	}
+
+	fetchRead('product');
 </script>
 
 <template>
@@ -21,30 +23,49 @@
 			<button v-bind:class="{isModeSelected: dbAdmin.mode == 0}" @click="dbAdmin.mode = 0">Skapa</button>
 			<button v-bind:class="{isModeSelected: dbAdmin.mode == 1}" @click="(async () => {
 				dbAdmin.mode = 1;
-				fetchRead(['product', 'unit', 'property', 'category', 'subcategory'][dbAdmin.tab]);
+				fetchRead(['product', 'unit', 'property', 'section', 'category', 'subcategory', 'location'][dbAdmin.tab]);
 			})">Hantera</button>
 		</div>
 		<div class="tabCont">
 			<button v-bind:class="{isModeSelected: dbAdmin.tab == 0}" @click="(async () => {
+				dbAdmin.data = {};
 				dbAdmin.tab = 0;
-				fetchRead('product');
-			})">Produkt (???)</button>
+				await fetchRead('product');
+				// Loading complete
+			})">Produkt</button>
 			<button v-bind:class="{isModeSelected: dbAdmin.tab == 1}" @click="(async () => {
+				dbAdmin.data = {};
 				dbAdmin.tab = 1;
-				fetchRead('unit');
-			})">Enhet (meter, hk)</button>
+				await fetchRead('unit');
+			})">Enhet</button>
 			<button v-bind:class="{isModeSelected: dbAdmin.tab == 2}" @click="(async () => {
+				dbAdmin.data = {};
 				dbAdmin.tab = 2;
-				fetchRead('property');
-			})">Egenskap (förlik, effekt)</button>
+				await fetchRead('property');
+			})">Egenskap</button>
 			<button v-bind:class="{isModeSelected: dbAdmin.tab == 3}" @click="(async () => {
+				dbAdmin.data = {};
 				dbAdmin.tab = 3;
-				fetchRead('category');
-			})">Kategori (segel, motor)</button>
+				await fetchRead('section');
+			})">Avdelning</button>
 			<button v-bind:class="{isModeSelected: dbAdmin.tab == 4}" @click="(async () => {
+				dbAdmin.data = {};
 				dbAdmin.tab = 4;
-				fetchRead('subcategory');
-			})">Subkategori (försegel, tändkulemotor)</button>
+				await fetchRead('category');
+			})">Kategori</button>
+			<button v-bind:class="{isModeSelected: dbAdmin.tab == 5}" @click="(async () => {
+				dbAdmin.data = {};
+				dbAdmin.tab = 5;
+				await fetchRead('subcategory');
+			})">Subkategori</button>
+			<button v-bind:class="{isModeSelected: dbAdmin.tab == 6}" @click="(async () => {
+				dbAdmin.data = {};
+				dbAdmin.tab = 6;
+				await fetchRead('location');
+			})">Hyllplats</button>
+		</div>
+		<div class="responseCont">
+			<SideSelectResponse v-for="(entry, index) in dbAdmin.sideSelectResponses" v-bind:res="entry.res" v-bind:remove="() => dbAdmin.sideSelectResponses.splice(index, 1)" :key="entry.key"/>
 		</div>
 	</div>
 </template>
@@ -58,8 +79,8 @@
 	.modeSelCont > button{
 		width: 50%;
 		padding: 3px;
-		font-size: 15px;
 		border: outset;
+		font-size: 15px;
 	}
 	.modeSelCont > :first-child{
 		border-radius: 5px 0 0 5px;
@@ -81,9 +102,9 @@
 		width: 100%;
 		margin: 5px 0;
 		padding: 3px;
-		display: block;
-		font-size: 15px;
 		border: outset 3px;
 		border-radius: 5px;
+		display: block;
+		font-size: 15px;
 	}
 </style>

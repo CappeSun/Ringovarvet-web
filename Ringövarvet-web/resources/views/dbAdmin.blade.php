@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Databas - Ringövarvet</title>
-    @vite(['resources/js/dbAdmin.js'])
+    @vite(['resources/js/app.js'])
     <script type="text/javascript">
         const csrf_token = '{{ csrf_token() }}';
     </script>
@@ -26,6 +26,8 @@
     }
     .SideSelect{
         margin: 0 20px 0 0;
+        flex-basis: 200px;
+        flex-shrink: 0;
     }
     .AdminMenu{
         flex-grow: 1;

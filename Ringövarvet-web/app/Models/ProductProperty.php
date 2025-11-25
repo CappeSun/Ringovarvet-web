@@ -10,4 +10,10 @@ class ProductProperty extends Model
     use HasFactory;
 
     public $table = 'products-properties';
+
+    protected $fillable = [
+        'productId',
+        'propertyId',
+        'value'
+    ];
 }
