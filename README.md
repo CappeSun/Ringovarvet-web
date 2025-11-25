@@ -2,9 +2,8 @@
 
 ## Nästa
 
-- Hyllplats, tabell med hyllplatser som kopplas till varje produkt
+- Länkar på rotsidan
 - Lägga till, handera, radera alla typer
-- Adminnivå 0 visa adminsidor, nivå 1 skapa produkter, nivå 2 skapa och hantera produkter, kategorier, enheter, egenskaper, platser, nivå 7 skapa och hantera konton, endast ett
 - Lägga till produktbilder
 - Produktsida
 - Skick etc. visas som text på produktsida, lagras som värde
@@ -20,4 +19,4 @@
 
 ## Nästa möte
 
-13:00 - 25 Nov
+13:00 - 02 Nov
