@@ -2,10 +2,8 @@
 
 ## Nästa
 
-- Produkt till artikel
-- Länkar på rotsidan
 - Lägga till, handera, radera alla typer
-- Lägga till produktbilder
+- Hantera produktbilder
 - Produktsida
 - Skick etc. visas som text på produktsida, lagras som värde
 
