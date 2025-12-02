@@ -5,7 +5,7 @@
 - Lägga till, handera, radera alla typer
 - Hantera produktbilder
 - Produktsida
-- Skick etc. visas som text på produktsida, lagras som värde
+- Antal för olika skick
 
 ## Framtid
 
@@ -18,4 +18,4 @@
 
 ## Nästa möte
 
-13:00 - 02 Nov
+13:00 - 04 Dec
