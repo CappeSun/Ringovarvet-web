@@ -2,14 +2,15 @@
 
 ## Nästa
 
-- Lägga till, handera, radera alla typer
 - Hantera produktbilder
 - Produktsida
-- Antal för olika skick
+- Bort med skick
+- QR till produktsida
+- Etikett QR, Pris, ID
 
 ## Framtid
 
-- QR till produktsida
+- Lägga till, handera, radera alla typer
 
 ## Osäkert
 
@@ -18,4 +19,4 @@
 
 ## Nästa möte
 
-13:00 - 04 Dec
+14:00 - 09 Dec
