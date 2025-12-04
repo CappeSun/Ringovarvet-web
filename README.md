@@ -7,6 +7,7 @@
 - Bort med skick
 - QR till produktsida
 - Etikett QR, Pris, ID
+- Oändlig session
 
 ## Framtid
 
