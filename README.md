@@ -3,7 +3,6 @@
 ## Nästa
 
 - Tvinga HTTPS
-- , -> . vid nummer
 - Nollställ bilder efter skapa
 - Produktsida, dator flex row, mobil flex col rev
 - Bort med skick
