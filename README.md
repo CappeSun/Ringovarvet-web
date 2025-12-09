@@ -2,7 +2,6 @@
 
 ## Nästa
 
-- Tvinga HTTPS
 - Nollställ bilder efter skapa
 - Produktsida, dator flex row, mobil flex col rev
 - QR till produktsida
