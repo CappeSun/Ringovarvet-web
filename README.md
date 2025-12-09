@@ -2,6 +2,7 @@
 
 ## Nästa
 
+- Tvinga HTTPS
 - Hantera produktbilder
 - Produktsida
 - Bort med skick
