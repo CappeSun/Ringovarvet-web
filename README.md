@@ -3,6 +3,7 @@
 ## Nästa
 
 - Tvinga HTTPS
+- , -> . vid nummer
 - Hantera produktbilder
 - Produktsida
 - Bort med skick
