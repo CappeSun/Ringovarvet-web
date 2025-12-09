@@ -5,7 +5,6 @@
 - Tvinga HTTPS
 - Nollställ bilder efter skapa
 - Produktsida, dator flex row, mobil flex col rev
-- Bort med skick
 - QR till produktsida
 - Etikett QR, Pris, ID
 - Oändlig session
