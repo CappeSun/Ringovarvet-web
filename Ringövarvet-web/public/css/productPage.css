@@ -1,0 +1,20 @@
+.imageCont{
+	height: 200px;
+	width: 30%;
+	display: flex;
+	overflow-x: scroll;
+	scroll-snap-type: x mandatory;
+}
+.imageCont > img{
+	height: 100%;
+	scroll-snap-align: center;
+}
+.adminMenu{
+	height: 80px;
+	position: fixed;
+	bottom: 0;
+	left: 0;
+}
+.adminMenuSpacer{
+	height: 80px;
+}

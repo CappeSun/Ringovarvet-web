@@ -11,8 +11,9 @@ class Product extends Model
 
     protected $fillable = [
         'subcategoryId',
-        'locationId',
         'count',
-        'cost'
+        'cost',
+        'condition',
+        'locationId'
     ];
 }

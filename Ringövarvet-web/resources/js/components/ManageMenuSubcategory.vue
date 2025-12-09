@@ -37,24 +37,12 @@
 			resetCategoryId();
 			ownSubcategoryPropertiesData.forEach((e) => e.resetValue());
 		}">Återgå</button>
-		<button @click="() =>{
-			let propertiesUpdated = false;
-			// Add updating properties if properties updated
-			if (propertiesUpdated) {
-				p.update('subcategory', {
-					id: p.data.id,
-					name: p.data.name,
-					categoryId: getCategoryId(),
-					properties: ownSubcategoryPropertiesData.map((e) => getValue())
-				});
-			} else {
-				p.update('subcategory', {
-					id: p.data.id,
-					name: p.data.name,
-					categoryId: getCategoryId()
-				});
-			}
-		}">Uppdatera</button>
+		<button @click="p.update('subcategory', {
+			id: p.data.id,
+			name: p.data.name,
+			categoryId: getCategoryId(),
+			properties: null		// Probably won't add
+		})">Uppdatera</button>
 		<button @click="p.delete('subcategory', {id: p.data.id})">Radera</button>
 	</div>
 </template>

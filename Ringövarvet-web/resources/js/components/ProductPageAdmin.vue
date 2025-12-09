@@ -1,7 +1,7 @@
 <script setup>
 	import { ref } from 'vue';
 
-	const p = defineProps(['data', 'productProperties', 'properties', 'subcategories', 'units', 'locations', 'update', 'delete']);
+	const p = defineProps(['data', 'productProperties', 'properties', 'subcategories', 'units', 'update', 'delete']);
 
 	const currentCount = p.data.count;
 	const currentCost = p.data.cost;
@@ -18,21 +18,18 @@
 
 <template>
 	<div class="ManageMenuProductCont">
-		<span>ID: {{p.data.id}} <a :href="'/product/' + p.data.id">Visa produktsida</a></span>
+		<span>ID: {{p.data.id}}</span>
 		<h3>Subkategori</h3>
 		<span>{{p.subcategories.find((e) => e.id == p.data.subcategoryId).name}}</span>
-		<h3>Hyllplats</h3>
-		<span>{{p.locations.find((e) => e.id == p.data.locationId).name}}</span>
 		<h3>Egenskaper</h3>
 		<div>
 			<div v-for="entry in ownProductProperties">
-				<span>{{entry.property.name}}: {{entry.value}} {{p.units.find((e) => e.id == entry.property.unitId).name}}</span>
+				<span>{{entry.property.name}}: </span><input type="test" v-model="entry.value"> <span>{{p.units.find((e) => e.id == entry.property.unitId).name}}</span>
 			</div>
-			<p v-if="ownProductProperties.length == 0">Inga egenskaper</p>
 		</div>
 		<h3>Övrigt</h3>
 		<span>Antal: </span><input type="text" v-model="p.data.count"><br>
-		<span>Pris: </span><input type="text" v-model="p.data.cost"><span> kr</span><br>
+		<span>Pris: </span><input type="text" v-model="p.data.cost"><br>
 		<span>Skick: </span><input class="conditionInput" type="range" min="1" max="5" v-model="p.data.condition">
 		<span v-show="p.data.condition == 1"> (Måste repareras)</span>
 		<span v-show="p.data.condition == 2"> (Väldigt skadat)</span>
@@ -62,6 +59,8 @@
 		margin: 0 0 20px;
 		padding: 10px;
 		border: solid 1px;
+	}
+	.ManageMenuProductCont > input{
 	}
 	.ManageMenuProductCont > .conditionInput{
 		vertical-align: middle;

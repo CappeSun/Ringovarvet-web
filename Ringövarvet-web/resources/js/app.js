@@ -2,7 +2,7 @@ import './bootstrap';
 
 import {createApp} from 'vue/dist/vue.esm-bundler.js';
 // Index
-import DatabaseInterface from './components/DatabaseInterface.vue';
+import Index from './components/Index.vue';
 // DBAdmin
 import SideSelect from './components/SideSelect.vue';
 import SideSelectResponse from './components/SideSelectResponse.vue';
@@ -23,7 +23,7 @@ import CreateProductMobile from './components/CreateProductMobile.vue';
 import AccountManager from './components/AccountManager.vue';
 
 createApp({})
-	.component('DatabaseInterface', DatabaseInterface)
+	.component('Index', Index)
 	.component('SideSelect', SideSelect)
 	.component('SideSelectResponse', SideSelectResponse)
 	.component('AdminMenu', AdminMenu)

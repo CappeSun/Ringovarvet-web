@@ -20,7 +20,11 @@
 			p.data.name = currentName;
 			resetSectionId();
 		}">Återgå</button>
-		<button @click="p.update('category', {id: p.data.id, name: p.data.name, sectionId: getSectionId()})">Uppdatera</button>
+		<button @click="p.update('category', {
+			id: p.data.id,
+			name: p.data.name,
+			sectionId: getSectionId()
+		})">Uppdatera</button>
 		<button @click="p.delete('category', {id: p.data.id})">Radera</button>
 	</div>
 </template>

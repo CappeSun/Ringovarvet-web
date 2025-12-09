@@ -4,7 +4,7 @@
 	import { dbAdmin } from '../globals.js';
 
 	async function fetchRead(kind) {
-		let data = await fetch('/admin/read/' + kind,
+		let data = await fetch('/database/read/' + kind,
 		{
 			method: 'POST',
 			headers: {
@@ -18,55 +18,52 @@
 </script>
 
 <template>
-	<div>
-		<div class="modeSelCont">
-			<button v-bind:class="{isModeSelected: dbAdmin.mode == 0}" @click="dbAdmin.mode = 0">Skapa</button>
-			<button v-bind:class="{isModeSelected: dbAdmin.mode == 1}" @click="(async () => {
-				dbAdmin.mode = 1;
-				fetchRead(['product', 'unit', 'property', 'section', 'category', 'subcategory', 'location'][dbAdmin.tab]);
-			})">Hantera</button>
-		</div>
-		<div class="tabCont">
-			<button v-bind:class="{isModeSelected: dbAdmin.tab == 0}" @click="(async () => {
-				dbAdmin.data = {};
-				dbAdmin.tab = 0;
-				await fetchRead('product');
-				// Loading complete
-			})">Produkt</button>
-			<button v-bind:class="{isModeSelected: dbAdmin.tab == 1}" @click="(async () => {
-				dbAdmin.data = {};
-				dbAdmin.tab = 1;
-				await fetchRead('unit');
-			})">Enhet</button>
-			<button v-bind:class="{isModeSelected: dbAdmin.tab == 2}" @click="(async () => {
-				dbAdmin.data = {};
-				dbAdmin.tab = 2;
-				await fetchRead('property');
-			})">Egenskap</button>
-			<button v-bind:class="{isModeSelected: dbAdmin.tab == 3}" @click="(async () => {
-				dbAdmin.data = {};
-				dbAdmin.tab = 3;
-				await fetchRead('section');
-			})">Avdelning</button>
-			<button v-bind:class="{isModeSelected: dbAdmin.tab == 4}" @click="(async () => {
-				dbAdmin.data = {};
-				dbAdmin.tab = 4;
-				await fetchRead('category');
-			})">Kategori</button>
-			<button v-bind:class="{isModeSelected: dbAdmin.tab == 5}" @click="(async () => {
-				dbAdmin.data = {};
-				dbAdmin.tab = 5;
-				await fetchRead('subcategory');
-			})">Subkategori</button>
-			<button v-bind:class="{isModeSelected: dbAdmin.tab == 6}" @click="(async () => {
-				dbAdmin.data = {};
-				dbAdmin.tab = 6;
-				await fetchRead('location');
-			})">Hyllplats</button>
-		</div>
-		<div class="responseCont">
-			<SideSelectResponse v-for="(entry, index) in dbAdmin.sideSelectResponses" v-bind:res="entry.res" v-bind:remove="() => dbAdmin.sideSelectResponses.splice(index, 1)" :key="entry.key"/>
-		</div>
+	<div class="modeSelCont">
+		<button v-bind:class="{isModeSelected: dbAdmin.mode == 0}" @click="dbAdmin.mode = 0">Skapa</button>
+		<button v-bind:class="{isModeSelected: dbAdmin.mode == 1}" @click="(async () => {
+			dbAdmin.mode = 1;
+			fetchRead(['product', 'unit', 'property', 'section', 'category', 'subcategory', 'location'][dbAdmin.tab]);
+		})">Hantera</button>
+	</div>
+	<div class="tabCont">
+		<button v-bind:class="{isModeSelected: dbAdmin.tab == 0}" @click="(async () => {
+			dbAdmin.data = {};
+			dbAdmin.tab = 0;
+			fetchRead('product');
+		})">Artikel</button>
+		<button v-bind:class="{isModeSelected: dbAdmin.tab == 1}" @click="(async () => {
+			dbAdmin.data = {};
+			dbAdmin.tab = 1;
+			fetchRead('unit');
+		})">Enhet</button>
+		<button v-bind:class="{isModeSelected: dbAdmin.tab == 2}" @click="(async () => {
+			dbAdmin.data = {};
+			dbAdmin.tab = 2;
+			fetchRead('property');
+		})">Egenskap</button>
+		<button v-bind:class="{isModeSelected: dbAdmin.tab == 3}" @click="(async () => {
+			dbAdmin.data = {};
+			dbAdmin.tab = 3;
+			fetchRead('section');
+		})">Avdelning</button>
+		<button v-bind:class="{isModeSelected: dbAdmin.tab == 4}" @click="(async () => {
+			dbAdmin.data = {};
+			dbAdmin.tab = 4;
+			fetchRead('category');
+		})">Kategori</button>
+		<button v-bind:class="{isModeSelected: dbAdmin.tab == 5}" @click="(async () => {
+			dbAdmin.data = {};
+			dbAdmin.tab = 5;
+			fetchRead('subcategory');
+		})">Subkategori</button>
+		<button v-bind:class="{isModeSelected: dbAdmin.tab == 6}" @click="(async () => {
+			dbAdmin.data = {};
+			dbAdmin.tab = 6;
+			fetchRead('location');
+		})">Hyllplats</button>
+	</div>
+	<div class="responseCont">
+		<SideSelectResponse v-for="(entry, index) in dbAdmin.sideSelectResponses" v-bind:res="entry.res" v-bind:remove="() => dbAdmin.sideSelectResponses.splice(index, 1)" :key="entry.key"/>
 	</div>
 </template>
 
@@ -95,8 +92,8 @@
 		border-style: inset !important;
 	}
 	.tabCont{
-		height: 100%;
 		width: 100%;
+		margin: 0 0 30px;
 	}
 	.tabCont > button{
 		width: 100%;
@@ -106,5 +103,8 @@
 		border-radius: 5px;
 		display: block;
 		font-size: 15px;
+	}
+	.responseCont{
+		width: 100%;
 	}
 </style>

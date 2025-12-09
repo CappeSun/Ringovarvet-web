@@ -12,65 +12,45 @@
 
 	const count = ref(1);
 	const cost = ref(0);
+	const condition = ref(5);
 
 	const images = ref([]);
 
-	async function productGetFormData() {
-		let fd = new FormData();
-		for (let i = 0; i < images.length; i++) {
-			let data = await fetch(images[i]);
-			data = data.blob();
-			fd.append(new File([data], i + '.png', {
-				type: 'image/png'
-			}));
+	const selectedSectionId = ref(0);
+	const selectedCategoryId = ref(0);
+	const selectedSubcategoryId = ref(0);
+
+	function sectionOnSelect(id) {
+		selectedSectionId.value = id;
+
+		if (id) {
+			dataCategories.value = CreateProductMobile.value.data.categories.filter((e) => e.sectionId == id);
+		} else {
+			dataCategories.value = [];
+			selectedCategoryId.value = 0;
+
+			dataSubcategories.value = [];
+			selectedSubcategoryId.value = 0;
 		}
-
-		return fd;
 	}
 
-	const productSelectedSectionId = ref(null);
-	const productSelectedCategoryId = ref(null);
-	const selectedSubcategoryId = ref(null);
+	function categoryOnSelect(id) {
+		selectedCategoryId.value = id;
 
-	let sectionGetValue = null;
-
-	let categoryGetValue = null;
-	let categoryResetValue = null;
-
-	let subcategoryGetValue = null;
-	let subcategoryResetValue = null;
-
-	const sectionOnSelect = () =>{
-		dataSubcategories.value = [];
-
-		productSelectedSectionId.value = sectionGetValue();
-		dataCategories.value = CreateProductMobile.value.data.categories.filter((e) => e.sectionId == productSelectedSectionId.value);
-
-		categoryResetValue();
-
-		console.log(sectionGetValue(), categoryGetValue(), subcategoryGetValue())
+		if (id) {
+			dataSubcategories.value = CreateProductMobile.value.data.subcategories.filter((e) => e.categoryId == id);
+		} else {
+			dataSubcategories.value = [];
+			selectedSubcategoryId.value = 0;
+		}
 	}
-	const categoryOnSelect = () =>{
-		productSelectedCategoryId.value = categoryGetValue();
-		dataSubcategories.value = CreateProductMobile.value.data.subcategories.filter((e) => e.categoryId == productSelectedCategoryId.value);
 
-		subcategoryResetValue();
-
-		console.log(sectionGetValue(), categoryGetValue(), subcategoryGetValue())
+	function subcategoryOnSelect(id) {
+		selectedSubcategoryId.value = id;
+		fetchReadProperties();
 	}
-	const subcategoryOnSelect = () =>{
-		selectedSubcategoryId.value = subcategoryGetValue();
-		dataProperties.value = CreateProductMobile.value.data.subcategoryProperties
-			.filter((e) => e.subcategoryId == selectedSubcategoryId.value)
-			.map((e) => ({
-				value: '',
-				property: CreateProductMobile.value.data.properties.find((ee) => ee.id == e.propertyId)
-			}));
 
-		console.log(sectionGetValue(), categoryGetValue(), subcategoryGetValue())
-
-		console.log(dataProperties.value)
-	}
+	let locationGetValue;
 
 	const dataCategories = ref([]);
 	const dataSubcategories = ref([]);
@@ -83,23 +63,52 @@
 
 	// FETCH
 
-	async function fetchCreateProduct(body) {
-		let res = await fetch('/admin/create/product', {
+	async function fetchCreateProduct() {
+		let res = await fetch('/database/create/product', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
 				'X-CSRF-TOKEN': csrf_token
 			},
-			body: JSON.stringify(body)
+			body: JSON.stringify({
+				subcategoryId: selectedSubcategoryId.value,
+				properties: dataProperties.value.map((e) => ({value: e.value, propertyId: e.id})),
+				count: count.value,
+				cost: cost.value,
+				condition: condition.value,
+				locationId: locationGetValue()
+			})
 		});
 
-		if (res.status != 200) {
+		if (res.status != 200)
 			alert(await res.text());
+		else if (images.value.length != 0) {
+			let fd = new FormData();
+			fd.append('id', (await res.text()).split('[')[1].split(']')[0]);
+			for (let i = 0; i < images.value.length; i++) {
+				let data = await fetch(images.value[i]);
+				fd.append(i, new File([await data.blob()], i, {
+					type: 'image/jpeg'
+				}));
+			}
+
+			res = await fetch('/database/create/productImages', {
+				method: 'POST',
+				headers: {
+					'X-CSRF-TOKEN': csrf_token
+				},
+				body: fd
+			});
+
+			if (res.status == 200)
+				alert('Product and images created');
+			else
+				alert(await res.text());
 		}
 	}
 
-	async function fetchReadProduct() {
-		let data = await fetch('/admin/read/productMobile',
+	async function fetchReadCategories() {
+		let data = await fetch('/database/read/productMobileCategories',
 		{
 			method: 'POST',
 			headers: {
@@ -109,7 +118,23 @@
 		CreateProductMobile.value.data = await data.json();
 	}
 
-	fetchReadProduct();
+	fetchReadCategories();
+
+	async function fetchReadProperties() {
+		let data = await fetch('/database/read/productMobileProperties',
+		{
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				'X-CSRF-TOKEN': csrf_token
+			},
+			body: JSON.stringify({
+				subcategoryId: selectedSubcategoryId.value
+			})
+		});
+		dataProperties.value = await data.json();
+		dataProperties.value.map((e) => e.value = '');
+	}
 
 	// OTHER
 
@@ -155,7 +180,7 @@
 					0, 0, 1080, 1920);
 			}
 
-			images.value.push(cameraVideoCanvas.toDataURL('image/png'));
+			images.value.push(cameraVideoCanvas.toDataURL('image/jpeg', 0.3));
 		};
 	}
 
@@ -163,53 +188,83 @@
 		CreateProductMobile.value.mode = 0;
 
 		photoVideoElement.pause();
-		delete photoVideoElement.srcObject;
+		photoVideoElement.srcObject = undefined;
 		cameraVideoStream.getTracks()[0].stop();
 		cameraVideoStream = null;
 	}
-
-	//screen.orientation.type.includes('landscape')
 </script>
 
 <template>
-	<div class="createCont" v-show="CreateProductMobile.mode == 0">
-		<h3>Avdelning</h3>
-		<SearchSelect v-bind:list="CreateProductMobile.data.sections" v-bind:getValue="(fun) => sectionGetValue = fun" v-bind:onSelect="sectionOnSelect" v-bind:default="0"/>
-		<h3>Kategori</h3>
-		<SearchSelect v-bind:list="dataCategories" v-bind:getValue="(fun) => categoryGetValue = fun" v-bind:resetValue="(fun) => categoryResetValue = fun" v-bind:onSelect="categoryOnSelect" v-bind:default="0"/>
-		<h3>Subkategori</h3>
-		<SearchSelect v-bind:list="dataSubcategories" v-bind:getValue="(fun) => subcategoryGetValue = fun" v-bind:resetValue="(fun) => subcategoryResetValue = fun" v-bind:onSelect="subcategoryOnSelect" v-bind:default="0"/>
-		<h3>Egenskaper</h3>
-		<div>
-			<div v-for="entry in dataProperties">
-				<span>{{entry.property.name}}: </span><input type="test" v-model="entry.value"><span>{{CreateProductMobile.data.units.find((e) => e.id == entry.property.unitId).name}}</span>
+	<div class="CreateProductMobile" v-show="CreateProductMobile.mode == 0">
+		<div class="selectSection" v-if="!selectedSectionId">
+			<h3>Avdelning</h3>
+			<div>
+				<p v-for="entry in CreateProductMobile.data.sections" @click="sectionOnSelect(entry.id)">{{entry.name}}</p>
 			</div>
 		</div>
-		<h3>Övrigt</h3>
-		<span>Antal: </span><input type="text" v-model="count"><br>
-		<span>Pris: </span><input type="text" v-model="cost"><br>
-		<h3>Bilder</h3>
-		<button @click="handleOpenCamera()">Öppna kamera</button>
-		<div class="imagesCont">
-			<div v-for="(entry, i) in images">
-				<img v-bind:src="entry">
-				<button @click="images.splice(i, 1)">Ta bort</button>
-			</div>
-			<p v-if="images.length == 0">Inga bilder</p>
+		<div class="selectedSection" v-else @click="sectionOnSelect(0)">
+			<p>{{CreateProductMobile.data.sections.find((e) => e.id == selectedSectionId).name}}</p>
+			<button>X</button>
 		</div>
-		<button @click="(async () =>{
-			let fd = await productGetFormData();
-			fetchCreateProduct({
-				subcategoryId: selectedSubcategoryId,
-				count: count,
-				cost: cost,
-				properties: dataProperties.map((e) => ({value: e.value, propertyId: e.property.id})),
-				images: fd
-			});
-			count = 1;
-			cost = 0;
-			productDataProperties.forEach((e) => e.value = '');
-		})()">Skapa</button>
+		<template v-if="selectedSectionId">
+			<div class="selectCategory" v-if="!selectedCategoryId">
+				<h3>Kategori</h3>
+				<div>
+					<p v-for="entry in dataCategories" @click="categoryOnSelect(entry.id)">{{entry.name}}</p>
+				</div>
+			</div>
+			<div class="selectedCategory" v-else @click="categoryOnSelect(0)">
+				<p>{{dataCategories.find((e) => e.id == selectedCategoryId).name}}</p>
+				<button>X</button>
+			</div>
+		</template>
+		<template v-if="selectedCategoryId">
+			<div class="selectSubcategory" v-if="!selectedSubcategoryId">
+				<h3>Subkategori</h3>
+				<div>
+					<p v-for="entry in dataSubcategories" @click="subcategoryOnSelect(entry.id)">{{entry.name}}</p>
+				</div>
+			</div>
+			<div class="selectedSubcategory" v-else @click="subcategoryOnSelect(0)">
+				<p>{{dataSubcategories.find((e) => e.id == selectedSubcategoryId).name}}</p>
+				<button>X</button>
+			</div>
+		</template>
+		<template v-if="selectedSubcategoryId">
+			<h3>Hyllplats</h3>
+			<SearchSelect v-bind:list="CreateProductMobile.data.locations" v-bind:getValue="(fun) => locationGetValue = fun" v-bind:default="0"/>
+			<h3>Egenskaper</h3>
+			<div>
+				<div v-for="entry in dataProperties">
+					<span>{{entry.name}}: </span><input type="test" v-model="entry.value"> <span>{{entry.unit}}</span>
+				</div>
+			</div>
+			<h3>Övrigt</h3>
+			<span>Antal: </span><input type="text" v-model="count"><br>
+			<span>Pris: </span><input type="text" v-model="cost"><br>
+			<span>Skick: </span><input class="conditionInput" type="range" min="1" max="5" v-model="condition">
+			<span v-show="condition == 1"> (Måste repareras)</span>
+			<span v-show="condition == 2"> (Väldigt skadat)</span>
+			<span v-show="condition == 3"> (Något skadat)</span>
+			<span v-show="condition == 4"> (Använt)</span>
+			<span v-show="condition == 5"> (Nyskick)</span>
+			<h3>Bilder</h3>
+			<button @click="handleOpenCamera()">Öppna kamera</button>
+			<div class="imagesCont">
+				<div v-for="(entry, i) in images">
+					<img v-bind:src="entry">
+					<button @click="images.splice(i, 1)">Ta bort</button>
+				</div>
+				<p v-if="images.length == 0">Inga bilder</p>
+			</div>
+			<button @click="(() =>{
+				fetchCreateProduct();
+				count = 1;
+				cost = 0;
+				condition = 5;
+				dataProperties.forEach((e) => e.value = '');
+			})()">Skapa</button>
+		</template>
 	</div>
 	<div class="photoCont" v-show="CreateProductMobile.mode == 1">
 		<div class="videoCont">
@@ -227,8 +282,52 @@
 <style type="text/css">
 	/*font: "Roboto Condensed", sans-serif;*/
 	/*font: "Roboto Slab", serif; */
+	.CreateProductMobile > :is(.selectSection, .selectCategory, .selectSubcategory){
+		height: 100vh;
+		display: flex;
+		flex-direction: column;
+	}
+	.CreateProductMobile > :is(.selectSection, .selectCategory, .selectSubcategory) > h3{
+		margin: 0;
+		padding: 15px;
+		flex: 0 0;
+		background-color: rgb(190, 190, 190);
+	}
+	.CreateProductMobile > :is(.selectSection, .selectCategory, .selectSubcategory) > div{
+		flex: 1 1;
+		overflow: scroll;
+	}
+	.CreateProductMobile > :is(.selectSection, .selectCategory, .selectSubcategory) > div > p{
+		margin: 0;
+		padding: 15px;
+		border-bottom: solid 2px rgb(190, 190, 190);
+	}
+	.CreateProductMobile > :is(.selectedSection, .selectedCategory, .selectedSubcategory){
+		margin: 0;
+		display: flex;
+		background-color: rgb(240, 240, 240);
+		border-bottom: solid 2px rgb(150, 150, 150);
+	}
+	.CreateProductMobile > :is(.selectedSection, .selectedCategory, .selectedSubcategory) > p{
+		margin: 0;
+		padding: 15px;
+		flex: 1 1;
+		line-height: 20px;
+	}
+	.CreateProductMobile > :is(.selectedSection, .selectedCategory, .selectedSubcategory) > button{
+		flex: 0 0 50px;
+		background-color: rgb(220, 220, 220);
+		color: rgb(255, 80, 80);
+		font-size: 20px;
+		border-radius: 0;
+		border: none;
+		border-left: solid 2px rgb(150, 150, 150);
+	}
 	body{
 		margin: 0;
+	}
+	.conditionInput{
+		vertical-align: middle;
 	}
 	.imagesCont{
 		width: 90%;

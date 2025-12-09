@@ -95,10 +95,9 @@
 	<ul>
 		<li>Se adminsidor</li>
 		<template v-if="access > 0">
-			<li>Skapa produkter</li>
+			<li>Skapa och hantera produkter</li>
 		</template>
 		<template v-if="access > 1">
-			<li>Hantera produkter</li>
 			<li>Skapa och hantera övrigt</li>
 		</template>
 	</ul>

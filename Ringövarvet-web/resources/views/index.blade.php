@@ -8,7 +8,7 @@
 </head>
 <body>
     <div class="app" id="app">
-        <database-interface/>
+        <index/>
     </div>
 </body>
 </html>

@@ -15,8 +15,9 @@ return new class extends Migration
 			$table->id();
 			$table->unsignedBigInteger('subcategoryId');
 			$table->foreign('subcategoryId')->references('id')->on('subcategories');
-			$table->integer('count')->default(1);
+			$table->integer('count')->default(0);
 			$table->double('cost')->default(-1);		// -1 no price data
+			$table->integer('condition')->default(5);
 			$table->unsignedBigInteger('locationId');
 			$table->foreign('locationId')->references('id')->on('locations');
 			$table->timestamps();

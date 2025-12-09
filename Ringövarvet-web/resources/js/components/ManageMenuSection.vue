@@ -13,7 +13,10 @@
 		<button @click="() =>{
 			p.data.name = currentName;
 		}">Återgå</button>
-		<button @click="p.update('section', {id: p.data.id, name: p.data.name})">Uppdatera</button>
+		<button @click="p.update('section', {
+			id: p.data.id,
+			name: p.data.name
+		})">Uppdatera</button>
 		<button @click="p.delete('section', {id: p.data.id})">Radera</button>
 	</div>
 </template>

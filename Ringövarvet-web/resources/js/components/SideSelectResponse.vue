@@ -18,8 +18,10 @@
 </template>
 
 <style type="text/css">
-	.cont{
-		width: 100%;
+	.cont > p{
+		max-height: 300px;
+		width: 200px;
+		overflow: scroll;
 	}
 	.statusOk{
 		background-color: rgb(180, 255, 180);
