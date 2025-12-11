@@ -2,6 +2,7 @@
 
 ## Nästa
 
+- Enheter i välj egenskap lista
 - Lägga till, handera, radera alla typer
 
 ## Framtid
