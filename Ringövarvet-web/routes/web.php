@@ -503,5 +503,5 @@ Route::get('/srv/cache', function (Request $request){
 	Artisan::call('config:clear');
 	Artisan::call('cache:clear');
 	Artisan::call('config:cache');
-	return response('Cache genomförd', 200);
+	return response('Cache complete', 200);
 });
