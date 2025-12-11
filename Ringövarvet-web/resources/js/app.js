@@ -17,6 +17,8 @@ import ManageMenuCategory from './components/ManageMenuCategory.vue';
 import ManageMenuSubcategory from './components/ManageMenuSubcategory.vue';
 import ManageMenuLocation from './components/ManageMenuLocation.vue';
 import SearchSelect from './components/SearchSelect.vue';
+import Qr from './components/Qr.vue';
+import Qrcode from './components/Qrcode.vue';
 // CreateProductMobile
 import CreateProductMobile from './components/CreateProductMobile.vue';
 // ManageAccounts
@@ -37,6 +39,8 @@ createApp({})
 	.component('ManageMenuSubcategory', ManageMenuSubcategory)
 	.component('ManageMenuLocation', ManageMenuLocation)
 	.component('SearchSelect', SearchSelect)
+	.component('Qr', Qr)
+	.component('Qrcode', Qrcode)
 	.component('CreateProductMobile', CreateProductMobile)
 	.component('AccountManager', AccountManager)
 	.mount('#app');

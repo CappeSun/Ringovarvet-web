@@ -53,18 +53,22 @@ Route::get('/product/{id}', function (Request $request, $id) {
 	return view('productPage')->with('with', ['id' => $id, 'user' => $request->user()]);
 });
 
+Route::get('/PRODUCT/{id}', function (Request $request, $id) {
+	return redirect('/product/'.$id);
+});
+
 // API
 
 // ##### CREATE #####
 
 Route::post('/database/create/product', function (Request $request) {
-	if (!$request->user() || $request->user()->access < 1) return response('Insufficient access', 403);
+	if (!$request->user() || $request->user()->access < 1) return response('Otillräcklig behörighet', 403);
 
 	foreach ($request->post('properties') as $property){
 		if (!Property::where('id', $property['propertyId'])->first())
-			return response('Property with ID ['.$property['propertyId'].'] does not exist', 406);
+			return response('Egenskap med ID ['.$property['propertyId'].'] finns inte', 406);
 		if (!$property['value'])
-			return response('Property has no value', 406);
+			return response('Egenskap saknar värde', 406);
 	}
 
 	$product = new Product([
@@ -86,13 +90,13 @@ Route::post('/database/create/product', function (Request $request) {
 		])->save();
 	}
 
-	return response('Product with ID ['.$product->id.'] was created', 200);
+	return response('Artikel med ID ['.$product->id.'] skapades', 200);
 });
 
 Route::post('/database/create/productImages', function (Request $request) {
-	if (!$request->user() || $request->user()->access < 1) return response('Insufficient access', 403);
+	if (!$request->user() || $request->user()->access < 1) return response('Otillräcklig behörighet', 403);
 
-	if (!Product::where('id', $request->get('id'))->first()) return response('Product with ID ['.$request->get('id').'] does not exist', 406);
+	if (!Product::where('id', $request->get('id'))->first()) return response('Artikel med ID ['.$request->get('id').'] finns inte', 406);
 
 	$i = 0;
 	$failCount = 0;
@@ -101,48 +105,48 @@ Route::post('/database/create/productImages', function (Request $request) {
 		if (!move_uploaded_file($file['tmp_name'], 'productImages/'.$request->get('id').'/'.$i++.'.jpg'))
 			$failCount++;
 
-	return response('Uploaded images for product with ID ['.$request->get('id').']'.($failCount ? ', but '.$failCount.' images could not be uploaded' : ''), 200);
+	return response('Laddade upp bilder för artikel med ID ['.$request->get('id').']'.($failCount ? ', men '.$failCount.' bilder kunde inte laddas upp' : ''), 200);
 });
 
 Route::post('/database/create/unit', function (Request $request) {
-	if (!$request->user() || $request->user()->access < 2) return response('Insufficient access', 403);
+	if (!$request->user() || $request->user()->access < 2) return response('Otillräcklig behörighet', 403);
 
-	if (!$request->post('name')) return response('Unit name cannot be blank', 406);
+	if (!$request->post('name')) return response('Enhetens namn kan inte vara tomt', 406);
 
 	new Unit([
 		'name' => $request->post('name')
 	])->save();
 
-	return response('Unit ['.$request->post('name').'] was created', 200);
+	return response('Enhet ['.$request->post('name').'] skapades', 200);
 });
 
 Route::post('/database/create/property', function (Request $request) {
-	if (!$request->user() || $request->user()->access < 2) return response('Insufficient access', 403);
+	if (!$request->user() || $request->user()->access < 2) return response('Otillräcklig behörighet', 403);
 
 	if (!$request->post('name')) return response('Property name cannot be blank', 406);
 
-	if (!Unit::where('id', $request->post('unitId'))->first()) return response('Unit with id ['.$request->post('unitId').'] does not exist', 406);
+	if (!Unit::where('id', $request->post('unitId'))->first()) return response('Enhet med ID ['.$request->post('unitId').'] finns inte', 406);
 
 	new Property([
 		'name' => $request->post('name'),
 		'unitId' => $request->post('unitId')
 	])->save();
 
-	return response('Property ['.$request->post('name').'] with unit ['.Unit::where('id',$request->post('unitId'))->first()->name.'] was created', 200);
+	return response('Egenskap ['.$request->post('name').'] med enhet ['.Unit::where('id',$request->post('unitId'))->first()->name.'] skapades', 200);
 });
 
 Route::post('/database/create/section', function (Request $request) {
-	if (!$request->user() || $request->user()->access < 2) return response('Insufficient access', 403);
+	if (!$request->user() || $request->user()->access < 2) return response('Otillräcklig behörighet', 403);
 	
 	new Section([
 		'name' => $request->post('name')
 	])->save();
 
-	return response('Section ['.$request->post('name').'] was created', 200);
+	return response('Avdelning ['.$request->post('name').'] skapades', 200);
 });
 
 Route::post('/database/create/category', function (Request $request) {
-	if (!$request->user() || $request->user()->access < 2) return response('Insufficient access', 403);
+	if (!$request->user() || $request->user()->access < 2) return response('Otillräcklig behörighet', 403);
 	
 	$category = new Category([
 		'name' => $request->post('name'),
@@ -150,15 +154,15 @@ Route::post('/database/create/category', function (Request $request) {
 	]);
 	$category->save();
 
-	return response('Category ['.$request->post('name').'] was created', 200);
+	return response('Kategori ['.$request->post('name').'] skapades', 200);
 });
 
 Route::post('/database/create/subcategory', function (Request $request) {
-	if (!$request->user() || $request->user()->access < 2) return response('Insufficient access', 403);
+	if (!$request->user() || $request->user()->access < 2) return response('Otillräcklig behörighet', 403);
 	
 	foreach ($request->post('propertyIds') as $value)
 		if (!Property::where('id', $value)->first())
-			return response('Property with ID ['.$value.'] does not exist', 406);
+			return response('Egenskap med ID ['.$value.'] finns inte', 406);
 
 	$subcategory = new Subcategory([
 		'name' => $request->post('name'),
@@ -173,16 +177,16 @@ Route::post('/database/create/subcategory', function (Request $request) {
 		])->save();
 	}
 
-	return response('Subcategory ['.$request->post('name').'] was created', 200);
+	return response('Subkategori ['.$request->post('name').'] skapades', 200);
 });
 
 Route::post('/database/create/location', function (Request $request) {
-	if (!$request->user() || $request->user()->access < 2) return response('Insufficient access', 403);
+	if (!$request->user() || $request->user()->access < 2) return response('Otillräcklig behörighet', 403);
 	
 	new Location([
 		'name' => $request->post('name')
 	])->save();
-	return response('Location ['.$request->post('name').'] was created', 200);
+	return response('Hyllplats ['.$request->post('name').'] skapades', 200);
 });
 
 // ##### READ #####
@@ -279,60 +283,60 @@ Route::post('/database/read/location', function (Request $request) {
 // ##### UPDATE #####
 
 Route::post('/database/update/product', function (Request $request) {
-	if (!$request->user() || $request->user()->access < 1) return response('Insufficient access', 403);
+	if (!$request->user() || $request->user()->access < 1) return response('Otillräcklig behörighet', 403);
 	
 	Product::where('id', $request->post('id'))->update([
 		'count' => $request->post('count'),
 		'cost' => $request->post('cost')
 	]);
 
-	return response('Product with ID ['.$request->post('id').'] updated to count ['.$request->post('count').'] and cost ['.$request->post('cost').']', 200);
+	return response('Artikel med ID ['.$request->post('id').'] uppdaterades till antal ['.$request->post('count').'] och kostnad ['.$request->post('cost').']', 200);
 });
 
 Route::post('/database/update/unit', function (Request $request) {
-	if (!$request->user() || $request->user()->access < 2) return response('Insufficient access', 403);
+	if (!$request->user() || $request->user()->access < 2) return response('Otillräcklig behörighet', 403);
 
-	if ($request->post('id') == 1) return response('Cannot update NULL unit', 406);
+	if ($request->post('id') == 1) return response('Kan inte uppdatera (Ingen enhet)-enheten', 406);
 	
 	Unit::where('id', $request->post('id'))->update(['name' => $request->post('name')]);
 
-	return response('Unit with ID ['.$request->post('id').'] updated to name ['.$request->post('name').']', 200);
+	return response('Enhet med ID ['.$request->post('id').'] uppdaterades till namn ['.$request->post('name').']', 200);
 });
 
 Route::post('/database/update/property', function (Request $request) {
-	if (!$request->user() || $request->user()->access < 2) return response('Insufficient access', 403);
+	if (!$request->user() || $request->user()->access < 2) return response('Otillräcklig behörighet', 403);
 	
 	Property::where('id', $request->post('id'))->update([
 		'name' => $request->post('name'),
 		'unitId' => $request->post('unitId')
 	]);
 
-	return response('Property with ID ['.$request->post('id').'] updated to name ['.$request->post('name').'] and unit ['.Unit::where('id', $request->post('unitId'))->first()->name.']', 200);
+	return response('Egenskap med ID ['.$request->post('id').'] uppdaterades till namn ['.$request->post('name').'] och enhet ['.Unit::where('id', $request->post('unitId'))->first()->name.']', 200);
 });
 
 Route::post('/database/update/section', function (Request $request) {
-	if (!$request->user() || $request->user()->access < 2) return response('Insufficient access', 403);
+	if (!$request->user() || $request->user()->access < 2) return response('Otillräcklig behörighet', 403);
 	
 	Section::where('id', $request->post('id'))->update([
 		'name' => $request->post('name')
 	]);
 
-	return response('Section with ID ['.$request->post('id').'] updated to name ['.$request->post('name').']', 200);
+	return response('Avdelning med ID ['.$request->post('id').'] uppdaterades till namn ['.$request->post('name').']', 200);
 });
 
 Route::post('/database/update/category', function (Request $request) {
-	if (!$request->user() || $request->user()->access < 2) return response('Insufficient access', 403);
+	if (!$request->user() || $request->user()->access < 2) return response('Otillräcklig behörighet', 403);
 	
 	Category::where('id', $request->post('id'))->update([
 		'name' => $request->post('name'),
 		'sectionId' => $request->post('sectionId')
 	]);
 
-	return response('Category with ID ['.$request->post('id').'] updated to name ['.$request->post('name').'] and section ['.Section::where('id', $request->post('sectionId'))->first()->name.']', 200);
+	return response('Kategori med ID ['.$request->post('id').'] uppdaterades till namn ['.$request->post('name').'] och avdelning ['.Section::where('id', $request->post('sectionId'))->first()->name.']', 200);
 });
 
 Route::post('/database/update/subcategory', function (Request $request) {
-	if (!$request->user() || $request->user()->access < 2) return response('Insufficient access', 403);
+	if (!$request->user() || $request->user()->access < 2) return response('Otillräcklig behörighet', 403);
 	
 	Subcategory::where('id', $request->post('id'))->update([
 		'name' => $request->post('name'),
@@ -340,9 +344,9 @@ Route::post('/database/update/subcategory', function (Request $request) {
 	]);
 
 	$propertiesUpdated = '';
-	if ($request->post('properties')) {
+	if ($request->post('properties')) {		// Not implemented
 		if (Property::where('subcategoryId', $request->post('id'))->first()) {
-			return response('Subcategory ['.$request->post('name').'] has products. Properties were not updated.');
+			return response('Subkategori ['.$request->post('name').'] har artiklar. Egenskaper uppdaterades inte.');
 		}
 
 		SubcategoryProperty::where('subcategoryId', $request->post('id'))->delete();
@@ -353,24 +357,24 @@ Route::post('/database/update/subcategory', function (Request $request) {
 				'propertyId' => $value
 			]);
 		}
-		$propertiesUpdated = ', properties were also updated';
+		$propertiesUpdated = ', även egenskaper uppdaterades.';
 	}
 
-	return response('Subcategory with ID ['.$request->post('id').'] updated to name ['.$request->post('name').'] and category ['.Category::where('id', $request->post('categoryId'))->first()->name.']'.$propertiesUpdated, 200);
+	return response('Subkategori med ID ['.$request->post('id').'] uppdaterades till namn ['.$request->post('name').'] and category ['.Category::where('id', $request->post('categoryId'))->first()->name.']'.$propertiesUpdated, 200);
 });
 
 Route::post('/database/update/location', function (Request $request) {
-	if (!$request->user() || $request->user()->access < 2) return response('Insufficient access', 403);
+	if (!$request->user() || $request->user()->access < 2) return response('Otillräcklig behörighet', 403);
 	
 	Location::where('id', $request->post('id'))->update(['name' => $request->post('name')]);
 
-	return response('Location with ID ['.$request->post('id').'] updated to name ['.$request->post('name').']', 200);
+	return response('Hyllplats med ID ['.$request->post('id').'] uppdaterades till namn ['.$request->post('name').']', 200);
 });
 
 // ##### DELETE #####
 
 Route::post('/database/delete/product', function (Request $request) {
-	if (!$request->user() || $request->user()->access < 1) return response('Insufficient access', 403);
+	if (!$request->user() || $request->user()->access < 1) return response('Otillräcklig behörighet', 403);
 	
 	$product = Product::where('id', $request->post('id'))->first();
 	ProductProperty::where('productId', $product->id)->delete();
@@ -381,107 +385,107 @@ Route::post('/database/delete/product', function (Request $request) {
 
 	rmdir('productImages/'.$product->id);
 
-	return response('Product with ID ['.$product->id.'] was deleted', 200);
+	return response('Artikel med ID ['.$product->id.'] raderades', 200);
 });
 
 Route::post('/database/delete/unit', function (Request $request) {
-	if (!$request->user() || $request->user()->access < 2) return response('Insufficient access', 403);
+	if (!$request->user() || $request->user()->access < 2) return response('Otillräcklig behörighet', 403);
 
-	if ($request->post('id') == 1) return response('Cannot delete NULL unit', 406);
+	if ($request->post('id') == 1) return response('Kan inte radera (Ingen enhet)-enheten', 406);
 	
 	$unit = Unit::where('id', $request->post('id'))->first();
 
-	if (!$unit) return response('Unit with id ['.$request->post('id').'] does not exist');
+	if (!$unit) return response('Enhet med ID ['.$request->post('id').'] finns inte');
 
 	if (Property::where('unitId', $unit->id)->first())      // If there's a property bound to the unit, do not delete it
-		return response('Unit ['.$unit->name.'] is used by properties', 406);
+		return response('Enhet ['.$unit->name.'] används av egenskaper', 406);
 
 	$unit->delete();
 
-	return response('Unit ['.$unit->name.'] was deleted', 200);
+	return response('Enhet ['.$unit->name.'] raderades', 200);
 });
 
 Route::post('/database/delete/property', function (Request $request) {
-	if (!$request->user() || $request->user()->access < 2) return response('Insufficient access', 403);
+	if (!$request->user() || $request->user()->access < 2) return response('Otillräcklig behörighet', 403);
 
 	$property = Property::where('id', $request->post('id'))->first();
 
-	if (!$property) return response('Property with id ['.$request->post('id').'] does not exist');
+	if (!$property) return response('Egenskap med ID ['.$request->post('id').'] finns inte');
 
 	if (SubcategoryProperty::where('propertyId', $request->post('id'))->first())
-		return response('Property ['.$property->name.'] is used by subcategories', 406);
+		return response('Egenskap ['.$property->name.'] används av subkategorier', 406);
 	
 	$property->delete();
 
-	return response('Property ['.$property->name.'] was deleted', 200);
+	return response('Egenskap ['.$property->name.'] raderades', 200);
 });
 
 Route::post('/database/delete/section', function (Request $request) {
-	if (!$request->user() || $request->user()->access < 2) return response('Insufficient access', 403);
+	if (!$request->user() || $request->user()->access < 2) return response('Otillräcklig behörighet', 403);
 	
 	$section = Section::where('id', $request->post('id'))->first();
 
 	if (Category::where('sectionId', $section->id)->first())        // If there's a category bound to the section, do not delete it
-		return response('Section ['.$section->name.'] has categories', 406);
+		return response('Avdelning ['.$section->name.'] har kategorier', 406);
 
 	$section->delete();
 
-	return response('Category ['.$section->name.'] was deleted', 200);
+	return response('Category ['.$section->name.'] raderades', 200);
 });
 
 Route::post('/database/delete/category', function (Request $request) {
-	if (!$request->user() || $request->user()->access < 2) return response('Insufficient access', 403);
+	if (!$request->user() || $request->user()->access < 2) return response('Otillräcklig behörighet', 403);
 	
 	$category = Category::where('id', $request->post('id'))->first();
 
 	if (Subcategory::where('categoryId', $category->id)->first())       // If there's a subcategory bound to the category, do not delete it
-		return response('Category ['.$category->name.'] has subcategories', 406);
+		return response('Kategori ['.$category->name.'] har subkategorier', 406);
 
 	$category->delete();
 
-	return response('Category ['.$category->name.'] was deleted', 200);
+	return response('Kategori ['.$category->name.'] raderades', 200);
 });
 
 Route::post('/database/delete/subcategory', function (Request $request) {
-	if (!$request->user() || $request->user()->access < 2) return response('Insufficient access', 403);
+	if (!$request->user() || $request->user()->access < 2) return response('Otillräcklig behörighet', 403);
 	
 	$subcategory = Subcategory::where('id', $request->post('id'))->first();
 
 	if (Product::where('subcategoryId', $subcategory->id)->first())     // If there's a product bound to the subcategory, do not delete it
-		return response('Subcategory ['.$subcategory->name.'] has products', 406);
+		return response('Subkategori ['.$subcategory->name.'] har produkter', 406);
 
 	SubcategoryProperty::where('subcategoryId', $subcategory->id)->delete();
 
 	$subcategory->delete();
 
-	return response('Subcategory ['.$subcategory->name.'] was deleted', 200);
+	return response('Subcategory ['.$subcategory->name.'] raderades', 200);
 });
 
 Route::post('/database/delete/location', function (Request $request) {
-	if (!$request->user() || $request->user()->access < 2) return response('Insufficient access', 403);
+	if (!$request->user() || $request->user()->access < 2) return response('Otillräcklig behörighet', 403);
 	
 	$location = Location::where('id', $request->post('id'))->first();
 
 	if (Product::where('locationId', $location->id)->first())       // If there's a product bound to the location, do not delete it
-		return response('Location ['.$location->name.'] is used by products', 406);
+		return response('Hyllplats ['.$location->name.'] används av produkter', 406);
 
 	$location->delete();
 
-	return response('Location ['.$location->name.'] was deleted', 200);
+	return response('Hyllplats ['.$location->name.'] raderades', 200);
 });
 
-Route::post('/database/removeProduct', function (Request $request) {
-	if (!$request->user() || $request->user()->access < 1) return response('Insufficient access', 403);
+Route::post('/database/removeCountProduct', function (Request $request) {
+	if (!$request->user() || $request->user()->access < 1) return response('Otillräcklig behörighet', 403);
 	
 	$product = Product::where('id', $request->post('id'))->first();
 
 	if ($product->count < $request->post('count'))
-		return response('Not enough products in datadase', 406);
+		return response(['res' => 'Inte tillräckligt många produkter i databasen', 'left' => $product->count], 406);
 
 	$product->count = $product->count - $request->post('count');
 	$product->save();
 
-	return response('Location ['.$location->name.'] was deleted', 200);
+	return response(['res' => $request->post('count').' produkter med artikel-ID ['.$request->post('id').'] togs bort', 'left' => $product->count], 200);
 });
 
 ##### USER #####
@@ -494,10 +498,10 @@ Route::post('/user/delete', [UserController::class, 'delete']);
 ##### SERVER #####
 
 Route::get('/srv/cache', function (Request $request){
-	if (!$request->user() || $request->user()->access < 7) return response('Insufficient access', 403);
+	if (!$request->user() || $request->user()->access < 7) return response('Otillräcklig behörighet', 403);
 
 	Artisan::call('config:clear');
 	Artisan::call('cache:clear');
 	Artisan::call('config:cache');
-	return response('Cache complete', 200);
+	return response('Cache genomförd', 200);
 });

@@ -1,20 +1,92 @@
+*{
+	font-family: "Roboto Slab", serif;
+	color: rgb(54, 29, 95);
+}
+h1, h2, h3, h4, h5, h6{
+	font-family: "Roboto Condensed", sans-serif;
+}
+.productCont{
+	width: 80%;
+	margin: 50px auto 0;
+}
+.infoCont{
+	width: 98%;
+	padding: 20px;
+	margin: auto;
+	border: 1.5px solid rgba(54, 29, 95, 0.5);
+	box-sizing: border-box;
+}
+.infoCont > .subcategory{
+	margin: 0 0 25px;
+}
+.infoCont > div > p{
+	margin: 12px 0;
+}
+.infoCont > div > p > :first-child{
+	width: 140px;
+	display: inline-block;
+}
+.infoCont > .condition{
+	margin: 20px 0 18px;
+	padding: 20px 0 0;
+	border-top: 1.5px solid rgba(54, 29, 95, 0.5);
+}
+.infoCont > .count{
+	margin: 0 0 18px;
+}
+.infoCont > .cost{
+	margin: 0;
+}
 .imageCont{
-	height: 200px;
-	width: 30%;
+	width: 100%;
+	margin: auto;
 	display: flex;
-	overflow-x: scroll;
-	scroll-snap-type: x mandatory;
+	flex-wrap: wrap;
+	justify-content: space-between;
 }
 .imageCont > img{
-	height: 100%;
-	scroll-snap-align: center;
+	width: 48%;
+	margin: 1%;
+	display: inline-block;
 }
 .adminMenu{
-	height: 80px;
+	height: 70px;
+	width: 100%;
 	position: fixed;
 	bottom: 0;
 	left: 0;
+	display: flex;
+	border-top: 2px solid rgb(190, 190, 190);
+	background-color: white;
+}
+.adminMenu > *{
+	margin: 15px 0;
+}
+.adminMenu > button{
+	width: 40px;
+	font-size: 20px;
+}
+.adminMenu > #adminMenuRemove{
+	width: fit-content;
+	margin: 15px 40px 15px 20px;
+}
+.adminMenu > input{
+	width: 30px;
+	font-size: 20px;
+}
+.adminMenu > span{
+	margin: 23px 0 0 10px;
+	font-size: 20px;
 }
 .adminMenuSpacer{
-	height: 80px;
+	height: 70px;
+}
+
+@media (width < 800px){
+	.productCont{
+		width: 90%;
+	}
+	.imageCont > img{
+		width: 98%;
+	}
 }

@@ -29,7 +29,8 @@
 		<SearchSelect v-bind:list="p.categories" v-bind:getValue="(fun) => getCategoryId = fun" v-bind:resetValue="(fun) => resetCategoryId = fun" v-bind:default="p.data.categoryId"/>
 		<h3>Egenskaper</h3>
 		<div class="subcategoryPropertyCont">
-			<SearchSelect v-for="subcategoryProperty in ownSubcategoryPropertiesData" v-bind:list="p.properties" v-bind:getValue="(fun) => subcategoryProperty.getValue = fun" v-bind:resetValue="(fun) => subcategoryProperty.resetValue = fun" v-bind:default="subcategoryProperty.propertyId" key="subcategoryProperty.key"/>
+			<!--<SearchSelect v-for="subcategoryProperty in ownSubcategoryPropertiesData" v-bind:list="p.properties" v-bind:getValue="(fun) => subcategoryProperty.getValue = fun" v-bind:resetValue="(fun) => subcategoryProperty.resetValue = fun" v-bind:default="subcategoryProperty.propertyId" key="subcategoryProperty.key"/>-->
+			<p v-for="subcategoryProperty in ownSubcategoryPropertiesData">{{p.properties.find((e) => e.id == subcategoryProperty.propertyId).name}}</p>
 		</div>
 		<br>
 		<button @click="() =>{

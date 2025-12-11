@@ -1,6 +1,10 @@
 <script setup>
 	import { ref } from 'vue';
 
+	// Import dbAdmin global and have button add if not in array and remove if in array
+
+	import { dbAdmin } from '../globals.js';
+
 	const p = defineProps(['data', 'productProperties', 'properties', 'subcategories', 'units', 'locations', 'update', 'delete']);
 
 	const currentCount = p.data.count;
@@ -18,16 +22,14 @@
 
 <template>
 	<div class="ManageMenuProductCont">
-		<span>ID: {{p.data.id}} <a :href="'/product/' + p.data.id">Visa produktsida</a></span>
+		<span>ID: {{p.data.id}} <a :href="'/product/' + p.data.id">Visa produktsida</a> <button class="QRButton" :class="{QRButtonAdded: dbAdmin.QRProductsSelected.includes(p.data.id)}" @click="dbAdmin.QRProductsSelected.includes(p.data.id) ? dbAdmin.QRProductsSelected.splice(dbAdmin.QRProductsSelected.indexOf(p.data.id), 1) : dbAdmin.QRProductsSelected.push(p.data.id)">{{dbAdmin.QRProductsSelected.includes(p.data.id) ? 'Ta bort QR' : 'Lägg till QR'}}</button></span>
 		<h3>Subkategori</h3>
 		<span>{{p.subcategories.find((e) => e.id == p.data.subcategoryId).name}}</span>
 		<h3>Hyllplats</h3>
 		<span>{{p.locations.find((e) => e.id == p.data.locationId).name}}</span>
 		<h3>Egenskaper</h3>
 		<div>
-			<div v-for="entry in ownProductProperties">
-				<span>{{entry.property.name}}: {{entry.value}} {{p.units.find((e) => e.id == entry.property.unitId).name}}</span>
-			</div>
+			<p v-for="entry in ownProductProperties">{{entry.property.name}}: {{entry.value}} {{p.units.find((e) => e.id == entry.property.unitId).name}}</p>
 			<p v-if="ownProductProperties.length == 0">Inga egenskaper</p>
 		</div>
 		<h3>Övrigt</h3>
@@ -65,5 +67,11 @@
 	}
 	.ManageMenuProductCont > .conditionInput{
 		vertical-align: middle;
+	}
+	.QRButton{
+		background-color: rgb(255, 180, 180);
+	}
+	.QRButtonAdded{
+		background-color: rgb(180, 255, 180);
 	}
 </style>

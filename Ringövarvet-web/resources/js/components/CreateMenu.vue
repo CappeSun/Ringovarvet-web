@@ -99,7 +99,8 @@
 
 	// FETCH
 
-	async function fetchCreate(kind, body, images=[]) {
+	async function fetchCreate(kind, body, imagesInput=[]) {
+		const images = structuredClone(imagesInput);
 		let res = await fetch('/database/create/' + kind, {
 			method: 'POST',
 			headers: {
@@ -109,6 +110,7 @@
 			body: JSON.stringify(body)
 		});
 		let resText = await res.text();
+
 		dbAdmin.value.sideSelectResponses.push({
 			res: {
 				text: resText,
@@ -207,7 +209,7 @@
 				}, productImagesInput.files);
 				productCount = 1;
 				productCost = 0;
-				productCondition = 5;
+				productImagesInput.value = null;
 				productFilteredProperties.forEach((e) => e.value = '');
 			})()">Skapa artikel</button>
 		</div>
@@ -261,7 +263,10 @@
 			<SearchSelect v-bind:list="dbAdmin.data.categories" v-bind:getValue="(fun) => subcategoryCategoryGetValue = fun" v-bind:resetValue="(fun) => subcategoryCategoryResetValue = fun" v-bind:default="0"/>
 			<h3>Egenskaper</h3>
 			<div class="subcategoryProperty" v-for="(entry, index) in subcategoryProperties" :key="entry.key">
-				<SearchSelect v-bind:list="dbAdmin.data.properties" v-bind:getValue="(fun) => subcategoryProperties[index].getValue = fun"/>
+				<SearchSelect v-if="dbAdmin.data.properties" v-bind:list="(() => dbAdmin.data.properties.map((e) =>({
+					name: e.name + ' (' + dbAdmin.data.units.find((ee) => ee.id == e.unitId).name + ')',
+					id: e.id
+				})))()" v-bind:getValue="(fun) => subcategoryProperties[index].getValue = fun"/>
 				<button @click="(() =>{
 					subcategoryProperties.splice(index, 1);
 				})()">Ta bort egenskap</button>
@@ -295,9 +300,6 @@
 </template>
 
 <style type="text/css">
-	*{
-		font: "Roboto Condensed", sans-serif;
-	}
 	.productConditionInput{
 		vertical-align: middle;
 	}
@@ -312,5 +314,4 @@
 	.subcategoryProperty > button{
 		flex: 0 0 auto;
 	}
-	/* "Roboto Slab", serif */
 </style>

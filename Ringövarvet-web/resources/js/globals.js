@@ -10,7 +10,9 @@ export const dbAdmin = ref({
 	data: {},
 	
 	sideSelectResponses: [],
-	sideSelectResponseKey: 0
+	sideSelectResponseKey: 0,
+
+	QRProductsSelected: []
 });
 
 export const CreateProductMobile = ref({

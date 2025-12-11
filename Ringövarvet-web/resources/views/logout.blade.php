@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Logga Ut - Ringövarvet</title>
+    <title>Logga Ut - Ringövarvets Lager</title>
 </head>
 <body>
 

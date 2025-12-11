@@ -105,6 +105,11 @@
 			else
 				alert(await res.text());
 		}
+
+		count.value = 1;
+		cost.value = 0;
+		images.value = [];
+		dataProperties.value.forEach((e) => e.value = '');
 	}
 
 	async function fetchReadCategories() {
@@ -155,8 +160,6 @@
 
 		const streamHeight = cameraVideoStream.getTracks()[0].getSettings().height;
 		const streamWidth = cameraVideoStream.getTracks()[0].getSettings().width;
-
-		console.log(streamHeight, streamWidth)
 
 		photoVideoElement.srcObject = cameraVideoStream;
 		photoVideoElement.play();
@@ -259,10 +262,6 @@
 			</div>
 			<button @click="(() =>{
 				fetchCreateProduct();
-				count = 1;
-				cost = 0;
-				condition = 5;
-				dataProperties.forEach((e) => e.value = '');
 			})()">Skapa</button>
 		</template>
 	</div>

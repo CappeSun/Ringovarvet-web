@@ -15,45 +15,51 @@ $product = Product::where('id', $with['id'])->first();
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Artikel - Ringövarvet</title>
-	@vite(['resources/js/app.js'])
+	<title>Artikel - Ringövarvets Lager</title>
 	<link rel="stylesheet" type="text/css" href="/css/productPage.css">
-	<link rel="script" type="text/javascript" href="/js/productPage.js">
+    <script type="text/javascript">
+        const csrf_token = '{{ csrf_token() }}';
+        const id = <?= $product->id; ?>;
+    </script>
 </head>
 <body>
 	<?php if (!$product) { ?>
 		<h2>Artikeln finns inte</h2>
 	<?php } else { ?>
-		<h3>Subkategori</h3>
-		<p><?= Subcategory::where('id', $product->subcategoryId)->first()->name; ?></p>
-		<h3>Egenskaper</h3>
-		<div>
-			 <?php foreach (ProductProperty::where('productId', $product->id)->get() as $value) {
-			 	$property = Property::where('id', $value->propertyId)->first();
-			 	?>
-			 	<p><?= $property->name; ?>: <?= $value['value'].' '.($property->unitId == 1 ? '' : Unit::where('id', $property->unitId)->first()->name); ?></p>
-			 <?php } ?>
-		</div>
-		<h3>Bilder</h3>
-		<div class="imageCont">
-			<?php foreach (array_slice(scandir('productImages/'.$with['id']), 2) as $value) { ?>
-				<img src="/productImages/<?= $with['id'].'/'.$value; ?>">
-			<?php } ?>
+		<div class="productCont">
+			<div class="infoCont">
+				<h3 class="subcategory"><?= Subcategory::where('id', $product->subcategoryId)->first()->name; ?></h3>
+				<div>
+					 <?php foreach (ProductProperty::where('productId', $product->id)->get() as $value) {
+					 	$property = Property::where('id', $value->propertyId)->first();
+					 	?>
+					 	<p><span><?= $property->name; ?></span><span><?= $value['value'].' '.($property->unitId == 1 ? '' : Unit::where('id', $property->unitId)->first()->name); ?></span></p>
+					 <?php } ?>
+				</div>
+				<h4 class="condition"><?= ['Måste repareras', 'Väldigt skadat', 'Något skadat', 'Använt', 'Nyskick'][$product->condition - 1]; ?></h4>
+				<h4 class="count"><?= $product->count; ?> i lager</h4>
+				<h4 class="cost"><?= $product->cost; ?> kr</h4>
+			</div>
+			<div class="imageCont">
+				<?php foreach (array_slice(scandir('productImages/'.$with['id']), 2) as $value) { ?>
+					<img src="/productImages/<?= $with['id'].'/'.$value; ?>">
+				<?php } ?>
+			</div>
 		</div>
 
 		<?php if ($with['user']) { ?>
 			<div class="adminMenu">
 				<button id="adminMenuRemove">Ta bort</button>
 				<button id="adminMenuRemoveMinus">-</button>
-				<span id="adminMenuRemoveCount">1</span>
+				<input id="adminMenuRemoveCount" type="text" inputmode="numeric" value="0">
 				<button id="adminMenuRemovePlus">+</button>
 				<span id="adminMenuInStorage">/ <?= $product->count ?></span>
 			</div>
 			<div class="adminMenuSpacer"></div>
 		<?php } ?>
-	<!-- TEMP FOR RELOAD -->
-	<div class="app" id="app">
-	</div>
 	<?php } ?>
 </body>
+<?php if ($with['user']) { ?>
+<script src="/js/productPage.js"></script>
+<?php } ?>
 </html>
