@@ -2,9 +2,6 @@
 
 ## Nästa
 
-- Produktsida, dator flex row, mobil flex col rev
-- QR till produktsida
-- Etikett QR, Pris, ID
 - Oändlig session
 
 ## Framtid
