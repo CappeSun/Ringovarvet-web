@@ -2,16 +2,15 @@
 
 ## Nästa
 
-- Oändlig session
+- Lägga till, handera, radera alla typer
 
 ## Framtid
 
-- Lägga till, handera, radera alla typer
+- Hantera produktbilder
 
 ## Osäkert
 
 - Språkval
-- Hantera produktbilder
 
 
 ## Nästa möte
