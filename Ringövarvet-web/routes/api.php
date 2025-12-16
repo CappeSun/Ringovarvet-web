@@ -17,8 +17,8 @@ Route::get('/srv/setup', function () {
 	]);
 	
 	new User([
-		'name' => 'Cappe',
-		'password' => 'Admin',
+		'name' => env('ADMIN_NAME'),
+		'password' => env('ADMIN_PASSWORD'),
 		'access' => 7
 	])->save();
 	
