@@ -19,12 +19,12 @@ $product = Product::where('id', $with['id'])->first();
 	<link rel="stylesheet" type="text/css" href="/css/productPage.css">
     <script type="text/javascript">
         const csrf_token = '{{ csrf_token() }}';
-        const id = <?= $product->id; ?>;
+        <?= $product ? 'const id = '.$product->id : null; ?>;
     </script>
 </head>
 <body>
 	<?php if (!$product) { ?>
-		<h2>Artikeln finns inte</h2>
+		<h2>Artikeln hittades inte</h2>
 	<?php } else { ?>
 		<div class="productCont">
 			<div class="infoCont">
@@ -56,10 +56,8 @@ $product = Product::where('id', $with['id'])->first();
 				<span id="adminMenuInStorage">/ <?= $product->count ?></span>
 			</div>
 			<div class="adminMenuSpacer"></div>
+			<script src="/js/productPage.js"></script>
 		<?php } ?>
 	<?php } ?>
 </body>
-<?php if ($with['user']) { ?>
-<script src="/js/productPage.js"></script>
-<?php } ?>
 </html>
