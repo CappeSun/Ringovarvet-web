@@ -123,7 +123,7 @@ Route::post('/database/create/unit', function (Request $request) {
 Route::post('/database/create/property', function (Request $request) {
 	if (!$request->user() || $request->user()->access < 2) return response('Otillräcklig behörighet', 403);
 
-	if (!$request->post('name')) return response('Property name cannot be blank', 406);
+	if (!$request->post('name')) return response('Egenskapens namn kan inte vara tomt', 406);
 
 	if (!Unit::where('id', $request->post('unitId'))->first()) return response('Enhet med ID ['.$request->post('unitId').'] finns inte', 406);
 
@@ -360,7 +360,7 @@ Route::post('/database/update/subcategory', function (Request $request) {
 		$propertiesUpdated = ', även egenskaper uppdaterades.';
 	}
 
-	return response('Subkategori med ID ['.$request->post('id').'] uppdaterades till namn ['.$request->post('name').'] and category ['.Category::where('id', $request->post('categoryId'))->first()->name.']'.$propertiesUpdated, 200);
+	return response('Subkategori med ID ['.$request->post('id').'] uppdaterades till namn ['.$request->post('name').'] och kategori ['.Category::where('id', $request->post('categoryId'))->first()->name.']'.$propertiesUpdated, 200);
 });
 
 Route::post('/database/update/location', function (Request $request) {
@@ -430,7 +430,7 @@ Route::post('/database/delete/section', function (Request $request) {
 
 	$section->delete();
 
-	return response('Category ['.$section->name.'] raderades', 200);
+	return response('Kategori ['.$section->name.'] raderades', 200);
 });
 
 Route::post('/database/delete/category', function (Request $request) {
@@ -458,7 +458,7 @@ Route::post('/database/delete/subcategory', function (Request $request) {
 
 	$subcategory->delete();
 
-	return response('Subcategory ['.$subcategory->name.'] raderades', 200);
+	return response('Subkategori ['.$subcategory->name.'] raderades', 200);
 });
 
 Route::post('/database/delete/location', function (Request $request) {
@@ -498,7 +498,7 @@ Route::post('/user/delete', [UserController::class, 'delete']);
 ##### SERVER #####
 
 Route::get('/srv/cache', function (Request $request){
-	if (!$request->user() || $request->user()->access < 7) return response('Otillräcklig behörighet', 403);
+	if (!$request->user() || $request->user()->access < 7) return response('Insufficient access', 403);
 
 	Artisan::call('config:clear');
 	Artisan::call('cache:clear');
